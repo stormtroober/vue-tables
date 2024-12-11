@@ -2,25 +2,23 @@
   <div>
     <h1>Minimal Table (Options API)</h1>
     <table border="1">
-      <thead>
-        <tr>
-          <th v-for="header in headers" :key="header">{{ header }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in dataset" :key="row.id">
-          <td v-for="header in headers" :key="header">{{ row[header] }}</td>
-        </tr>
-      </tbody>
+      <TableHeader :headers="headers" />
+      <TableBody :headers="headers" :dataset="dataset" />
     </table>
   </div>
 </template>
 
 <script>
 import Papa from "papaparse";
+import TableHeader from "./TableHeader.vue";
+import TableBody from "./TableBody.vue";
 
 export default {
   name: "Table",
+  components: {
+    TableHeader,
+    TableBody
+  },
   data() {
     return {
       headers: [],
