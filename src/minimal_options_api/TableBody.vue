@@ -1,14 +1,17 @@
 <template>
   <tbody>
-    <tr v-for="row in dataset" :key="row.id">
-      <td v-for="header in headers" :key="header">{{ row[header] }}</td>
-    </tr>
+    <TableRow v-for="row in dataset" :key="row.id" :row="row" :headers="headers" />
   </tbody>
 </template>
 
 <script>
+import TableRow from "./TableRow.vue";
+
 export default {
   name: "TableBody",
+  components: {
+    TableRow
+  },
   props: {
     headers: {
       type: Array,
