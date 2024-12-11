@@ -1,25 +1,25 @@
 <template>
-  <tbody>
-    <TableRow v-for="row in dataset" :key="row.id" :row="row" :headers="headers" />
-  </tbody>
+  <tr>
+    <TableCell v-for="header in headers" :key="header" :value="row[header]" />
+  </tr>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import TableRow from "./TableRow.vue";
+import TableCell from "./TableCell.vue";
 
 export default defineComponent({
-  name: "TableBody",
+  name: "TableRow",
   components: {
-    TableRow
+    TableCell
   },
   props: {
     headers: {
       type: Array,
       required: true
     },
-    dataset: {
-      type: Array,
+    row: {
+      type: Object,
       required: true
     }
   }
