@@ -1,5 +1,5 @@
 <script>
-import Table from './minimal_options_api/Table.vue';
+import Table from './minimal_composition_api/Table.vue';
 
 export default {
   name: 'App',
