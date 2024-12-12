@@ -14,7 +14,3 @@ export default {
     <Table />
   </div>
 </template>
-
-<style>
-/* Add your styles here */
-</style>
