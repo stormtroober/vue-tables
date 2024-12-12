@@ -1,21 +1,17 @@
 <template>
   <tbody>
-    <tr v-for="(row, rowIndex) in dataset" :key="rowIndex">
-      <th scope="row" tabindex="0">{{ row[headers[0]] }}</th>
-      <td tabindex="0"
-        v-for="(header) in headers.slice(1)"
-        :key="header"
-        :headers="`header-${header}`"
-      >
-        {{ row[header] }}
-      </td>
-    </tr>
+    <TableRow v-for="(row, rowIndex) in dataset" :key="rowIndex" :row="row" :headers="headers" />
   </tbody>
 </template>
 
 <script>
+import TableRow from "./TableRow.vue";
+
 export default {
   name: "TableBody",
+  components: {
+    TableRow
+  },
   props: {
     dataset: {
       type: Array,
@@ -28,24 +24,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-td, th {
-  padding: 8px;
-  text-align: left;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
-}
-
-tr:focus-within {
-  outline: 2px solid #007bff;
-  outline-offset: -2px;
-}
-
-[role="cell"]:focus, [role="columnheader"]:focus {
-  outline: 2px solid #007bff;
-  outline-offset: -2px;
-}
-</style>
