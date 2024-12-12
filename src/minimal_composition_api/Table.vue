@@ -1,49 +1,54 @@
 <template>
   <div>
     <h1>Minimal Table (Composition API)</h1>
-    <table border="1">
-      <TableHeader :headers="headers" />
-      <TableBody :headers="headers" :dataset="dataset" />
+    <!-- Loading and Error Handling -->
+    <div v-if="state.loading">Loading...</div>
+    <div v-else-if="state.error" class="error">{{ state.error }}</div>
+    <!-- Table Rendering -->
+    <table v-else border="1">
+      <TableHeader :headers="state.headers" />
+      <TableBody :headers="state.headers" :dataset="state.dataset" />
     </table>
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
+<script setup>
+import { reactive, onMounted, watch } from "vue";
 import Papa from "papaparse";
 import TableHeader from "./TableHeader.vue";
 import TableBody from "./TableBody.vue";
 
-export default {
-  name: "TableComposition",
-  components: {
-    TableHeader,
-    TableBody
-  },
-  setup() {
-    const headers = ref([]);
-    const dataset = ref([]);
+const state = reactive({
+  headers: [],
+  dataset: [],
+  csvUrl: "/dataset/bank.csv",
+  loading: true,
+  error: null,
+});
 
-    onMounted(() => {
-      fetch("/dataset/bank.csv")
-        .then((response) => response.text())
-        .then((csvText) => {
-          Papa.parse(csvText, {
-            header: true,
-            complete: (results) => {
-              headers.value = results.meta.fields;
-              dataset.value = results.data;
-            }
-          });
-        });
+const fetchData = async () => {
+  state.loading = true;
+  state.error = null;
+  try {
+    const response = await fetch(state.csvUrl);
+    const csvText = await response.text();
+    Papa.parse(csvText, {
+      header: true,
+      complete: (results) => {
+        state.headers = results.meta.fields;
+        state.dataset = results.data;
+      },
     });
-
-    return {
-      headers,
-      dataset
-    };
+  } catch (err) {
+    state.error = "Failed to load CSV data.";
+    console.error(err);
+  } finally {
+    state.loading = false;
   }
 };
+
+watch(() => state.csvUrl, fetchData);
+onMounted(fetchData);
 </script>
 
 <style scoped>
@@ -57,5 +62,9 @@ th, td {
 }
 th {
   background-color: #f4f4f4;
+}
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>
